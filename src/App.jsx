@@ -55,19 +55,29 @@ function App() {
       },
     })
       .then((res) => {
-        if (res.status !== 200) {
+        if (res.status !== 201) {
           return;
         } else {
           return res.json();
         }
       })
       .then((body) => {
-        setPosts((posts) => [...posts, body0]);
+        setPosts([...posts, body]);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  const onUpdate = async (id) => {
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({name: 'React Hooks PUT Request Example'})
+    };
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, requestOptions);
+    const data = await response.json();
+    console.log(data)
+  }
   return (
     <Router>
       <Header />
@@ -76,7 +86,7 @@ function App() {
           path="/"
           element={<Main posts={posts} id={id} setId={setId} onDelete={onDelete} />}
         />
-        <Route path="/posts/:id" element={<Post id={id} posts={posts} />} />
+        <Route path="/posts/:id" element={<Post id={id} onUpdate={onUpdate} posts={posts} />} />
         <Route
           path="/addPost"
           element={<AddPost onAdd={onAdd} posts={posts} setPosts={setPosts} />}
